@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Study;
+use Database\Seeders\StudySeeder;
 use Illuminate\Http\Request;
 
 class StudyController extends Controller
@@ -15,6 +16,10 @@ class StudyController extends Controller
     public function index()
     {
         $studies = Study::all();
+
+        return view('study.index', [ //nombre de fichero de la vista *study.index y los datos q le pasamos
+            'studies' => $studies
+        ]);
         return $studies;
         //return "Lista de estudios";
     }
@@ -26,7 +31,8 @@ class StudyController extends Controller
      */
     public function create()
     {
-        return "Aqui formulario de crear estudios";
+        return view('study.create');
+        //return "Aqui formulario de crear estudios";
     }
 
     /**
@@ -37,7 +43,15 @@ class StudyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'code' => 'required|unique:studies,code|max:6',
+            'name' => 'required|max:100',
+            'abreviation' => 'required|max:4',
+        ];
+        $this->validate($request, $rules);
+        $study = Study::create($request->all());
+        return redirect('/studies');
+        //return $study;     de una forma facil y rapida de guardar
     }
 
     /**
@@ -49,7 +63,11 @@ class StudyController extends Controller
     public function show($id)
     {
         $study = Study::find($id);
-        return "Mostrar estudio $study";
+
+        return view('study.show', [ 
+            'study' => $study
+        ]);
+        //return "Mostrar estudio $study";
     }
 
     /**
@@ -60,7 +78,7 @@ class StudyController extends Controller
      */
     public function edit(Study $study)
     {
-        //
+        return view('study.edit', ['study' => $study]);
     }
 
     /**
@@ -83,6 +101,8 @@ class StudyController extends Controller
      */
     public function destroy(Study $study)
     {
-        //
+        $study->delete();
+        //Study::destroy($id);   //este metodo sirve si solo tienes el id
+        return back();
     }
 }
