@@ -90,7 +90,9 @@ class StudyController extends Controller
      */
     public function update(Request $request, Study $study)
     {
-        //
+        $study->fill($request->all());
+        $study->save();
+        return redirect();
     }
 
     /**

@@ -6,7 +6,7 @@
     <title>Estudio</title>
 </head>
 <body>
-<h1>Alta de estudio</h1>
+<h1>Edicion de estudio</h1>
 <table>
     <form action="/studies/{{$study->id)}}" method="post">
         @csrf
